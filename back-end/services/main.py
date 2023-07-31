@@ -1,6 +1,6 @@
 from typing import Union
 
-from app import download_video
+from download.app import download_video
 from models.video import Video
 
 from fastapi import FastAPI
