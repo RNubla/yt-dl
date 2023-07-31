@@ -1,8 +1,7 @@
 from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
+from download.app import video_info
 
-
-from download.app import download_video
 from models.video import Video
 
 from fastapi import FastAPI
@@ -32,6 +31,4 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 @app.post("/video/")
 async def get_info(video: Video):
-    # if download_video(video) is None:
-    #     raise HTTPException(status_code=404, detail="Video unavailable")
-    return download_video(video)
+    return video_info(video)
