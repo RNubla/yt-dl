@@ -1,4 +1,6 @@
 from typing import Union
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from download.app import download_video
 from models.video import Video
@@ -6,6 +8,16 @@ from models.video import Video
 from fastapi import FastAPI
 
 app = FastAPI()
+
+origins = ["localhost:3000"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
