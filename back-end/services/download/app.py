@@ -47,3 +47,22 @@ def video_info(video: Video) -> VideoInfo | Exception | None:
             # return HTTPException(status_code=404)
         info = mapper.to(VideoInfo).map(info)
     return info
+
+
+def download_audio(videoId: str):
+    print(f"videoId {videoId}")
+    url: str = f"https://www.youtube.com/watch?v={videoId}"
+    ydl_opts = {
+        "format": "m4a/bestaudio/best",
+        # ℹ️ See help(yt_dlp.postprocessor) for a list of available Postprocessors and their arguments
+        "postprocessors": [
+            {  # Extract audio using ffmpeg
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "m4a",
+            }
+        ],
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        error_code = ydl.download([url])
+        print(f"error_code {error_code}")
+        return error_code

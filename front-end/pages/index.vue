@@ -86,7 +86,8 @@ const remove = (id: string) => {
             <div>
                 <ul class="flex flex-col gap-3 ">
                     <li v-for="video in  store.videoList " :key="video.id">
-                        <Card :title="video.title" :thumbnail-url="video.thumbnail" :remove="() => remove(video.id)" />
+                        <Card :title="video.title" :thumbnail-url="video.thumbnail" :remove="() => remove(video.id)"
+                            :download-links="video.requested_formats" />
                     </li>
                 </ul>
             </div>

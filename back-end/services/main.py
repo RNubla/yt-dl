@@ -1,6 +1,6 @@
 from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
-from download.app import video_info
+from download.app import video_info, download_audio
 
 from models.video import Video
 
@@ -32,3 +32,10 @@ def read_item(item_id: int, q: Union[str, None] = None):
 @app.post("/video/")
 async def get_info(video: Video):
     return video_info(video)
+
+
+@app.post("/video/{id}")
+def dl_audio(id: str):
+    download_audio(id)
+    return {"id": id}
+    # return download_audio(id)

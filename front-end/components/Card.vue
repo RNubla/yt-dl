@@ -1,5 +1,42 @@
 <script lang="ts" setup>
-defineProps(['title', 'thumbnailUrl', 'audioUrl', 'videoURL', 'remove'])
+import { RequestedFormat } from '~/server/models/youtube.schema';
+
+// defineProps(['title', 'thumbnailUrl', 'downloadLinks', 'videoURL', 'remove', 'downloadLinks'])
+const props = defineProps<{
+    title: string,
+    thumbnailUrl: string,
+    audioUrl?: string,
+    videoUrl?: string,
+    downloadLinks: RequestedFormat[]
+}>()
+
+console.log('downloadLinks: ', props.downloadLinks)
+const audioLink = props.downloadLinks.find((field) => field.video_ext === "none")
+const videoLink = props.downloadLinks.find((field) => field.video_ext === "webm")
+
+console.log('audioLink', audioLink)
+
+const download = async (url: string) => {
+    try {
+        console.log('url', url)
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'audio/webm'
+            }
+        })
+
+        console.log('response', response)
+
+        if (response.status === 200) {
+            console.log('response', response)
+        }
+    } catch (error) {
+
+    }
+}
+
 </script>
 
 <template>
@@ -13,8 +50,8 @@ defineProps(['title', 'thumbnailUrl', 'audioUrl', 'videoURL', 'remove'])
             <h2 class="card-title">{{ title }}</h2>
             <p>Click the button to listen on Spotiwhy app.</p>
             <div class="card-actions justify-end">
-                <button class="btn btn-primary hover:bg-info ">Audio</button>
-                <button class="btn btn-secondary hover:bg-info ">Video</button>
+                <button class="btn btn-primary hover:bg-info " @click="download(audioLink!.url)">Audio</button>
+                <button class="btn btn-secondary hover:bg-info " @click="download(videoLink!.url)">Video</button>
             </div>
         </div>
     </div>
