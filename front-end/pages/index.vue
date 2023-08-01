@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { videoInfoSchema } from '~/server/models/youtube.schema';
 import { z } from 'zod'
 import { useYTDLStore } from '~/stores/myStore'
 const store = useYTDLStore()
@@ -39,26 +40,26 @@ const onSubmit = async (e: Event) => {
         })
         urlInput.value.url = ''
         const result = await res.json()
-        store.addVideoToList(result)
-        // ytdlStore.addVideoToList(result)
-        // console.log(result.requested_formats[0].url)
-        const url = new URL(result.requested_formats[0].url)
-        const params = new URLSearchParams(url.search)
-        const expire = params.get('expire')
-        console.log(expire)
-        // console.log(`valid: ${valid.url}`)
+        const valid = videoInfoSchema.safeParse(result)
+
+        if (valid.success) {
+            store.addVideoToList(valid.data)
+
+            const url = new URL(valid.data.requested_formats[0].url)
+            const params = new URLSearchParams(url.search)
+            const expire = params.get('expire')
+            // console.log(expire)
+        }
     } catch (error) {
         inputError.value = true
         // console.log(error)
     }
-
-
 }
 
 const validateUrl = () => {
     try {
-        const valid = urlSchema.parse(urlInput.value)
-        if (valid) inputError.value = false
+        const valid = urlSchema.safeParse(urlInput.value)
+        if (valid.success) inputError.value = false
     } catch (error) {
         inputError.value = true
     }
@@ -88,10 +89,6 @@ const remove = (id: string) => {
                         <Card :title="video.title" :thumbnail-url="video.thumbnail" :remove="() => remove(video.id)" />
                     </li>
                 </ul>
-                <!-- <Card title="Hello" />
-                <Card />
-                <Card />
-                <Card /> -->
             </div>
         </main>
     </div>

@@ -1,9 +1,16 @@
 import { defineStore } from "pinia";
+import { VideoInfo } from "server/models/youtube.schema";
 
 export const useYTDLStore = defineStore('youtubeDL', {
-    state: () => ({ videoList: [] }),
+    state: () => {
+        const videoList: VideoInfo[] = []
+
+        return {
+            videoList
+        }
+    },
     actions: {
-        addVideoToList(payload: any) {
+        addVideoToList(payload: VideoInfo) {
             this.videoList.push(payload)
         },
         removeFromList(id: string) {
@@ -13,9 +20,4 @@ export const useYTDLStore = defineStore('youtubeDL', {
             }
         }
     }
-    // const videoList = ref([])
-
-    // function addVideoToList(payload: any) {
-    //     videoList.value.push(payload)
-    // }
 })
